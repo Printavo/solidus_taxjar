@@ -6,8 +6,9 @@ module SuperGood
           {}
             .merge(customer_params(order))
             .merge(order_address_params(order.tax_address))
+            .merge(stock_location_address_params(order.store.account.merch_stock_location))
             .merge(line_items_params(order.line_items))
-            .merge(shipping: order.shipment_total)
+            .merge(shipping: 0)
         end
 
         def address_params(address)
@@ -66,6 +67,16 @@ module SuperGood
             to_city: address.city,
             to_state: address&.state&.abbr || address.state_name,
             to_street: address.address1,
+          }
+        end
+
+        def stock_location_address_params(stock_location)
+          {
+            from_country: stock_location.country.iso,
+            from_zip: stock_location.zipcode,
+            from_city: stock_location.city,
+            from_state: stock_location&.state&.abbr || stock_location.state_name,
+            from_street: stock_location.address1,
           }
         end
 
