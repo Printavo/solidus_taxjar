@@ -3,9 +3,11 @@ module SuperGood
     module APIParams
       class << self
         def order_params(order)
+          to_address = order.for_delivery? ? order.tax_address : order.store.account.merch_stock_location
+
           {}
             .merge(customer_params(order))
-            .merge(order_address_params(order.tax_address))
+            .merge(order_address_params(to_address))
             .merge(stock_location_address_params(order.store.account.merch_stock_location))
             .merge(line_items_params(order.line_items))
             .merge(shipping: 0)
