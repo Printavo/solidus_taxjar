@@ -11,6 +11,13 @@ module SuperGood
             .merge(stock_location_address_params(order.store.account.merch_stock_location))
             .merge(line_items_params(order.line_items))
             .merge(shipping: 0)
+            .tap do |params|
+              next unless SuperGood::SolidusTaxJar.logging_enabled
+
+              Rails.logger.info(
+                "TaxJar params for #{order.number}: #{params.inspect}"
+              )
+            end
         end
 
         def address_params(address)
