@@ -10,6 +10,7 @@ module SuperGood
             .merge(order_address_params(to_address))
             .merge(stock_location_address_params(order.store.account.merch_stock_location))
             .merge(line_items_params(order.line_items))
+            .merge(nexus_address_params(order.store.account.merch_stock_location))
             .merge(shipping: 0)
             .tap do |params|
               next unless SuperGood::SolidusTaxJar.logging_enabled
@@ -116,6 +117,18 @@ module SuperGood
                 sales_tax: line_item_sales_tax(line_item)
               }
             end
+          }
+        end
+
+        def nexus_address_params(stock_location)
+          {
+            nexus_addresses: [{
+              country: stock_location.country.iso,
+              zip: stock_location.zipcode,
+              city: stock_location.city,
+              state: stock_location&.state&.abbr || stock_location.state_name,
+              street: stock_location.address1
+            }]
           }
         end
 
