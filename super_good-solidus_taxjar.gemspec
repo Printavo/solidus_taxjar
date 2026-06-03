@@ -28,7 +28,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "database_cleaner"
-  spec.add_development_dependency "rake", "~> 10.0"
+  # Rails 7.2+ railties requires rake >= 12.2; the original "~> 10.0" pin is
+  # unsatisfiable. Must live in the gemspec (not the Gemfile) or bundler rejects
+  # the conflicting requirements.
+  spec.add_development_dependency "rake", ">= 12.2"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rspec-rails"
   spec.add_development_dependency "vcr", "~> 4.0"
