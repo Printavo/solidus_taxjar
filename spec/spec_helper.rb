@@ -10,6 +10,13 @@ rescue LoadError
   exit
 end
 
+# The Solidus 2.11 generator + chained db:create/db:migrate populates the dummy
+# app's schema.rb but can leave the sqlite database file empty, so the spree_*
+# tables are missing at spec time. maintain_test_schema! loads schema.rb into the
+# database -- the standard rails_helper recovery for a stale/empty test schema.
+require "active_record"
+ActiveRecord::Migration.maintain_test_schema!
+
 RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
